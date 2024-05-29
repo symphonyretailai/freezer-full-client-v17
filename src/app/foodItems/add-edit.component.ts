@@ -6,11 +6,7 @@ import { itemLocationsByFreezer } from '../_helpers/data';
 
 import { FoodItemService, AlertService } from   '../_services';
 import { Observable, of } from 'rxjs';
-
-export interface ItemLocations{
-    name: string,
-    itemLocations: string []
-}
+import { ItemLocations } from '../_models/itemLocations';
 
 @Component({ templateUrl: 'add-edit.component.html' })
 
@@ -53,8 +49,6 @@ export class AddEditComponent implements OnInit {
                 .pipe(first())
                 .subscribe(x => {
                     this.form.patchValue(x);
-                    console.log("x: ", x);
-                    console.log("form: ", this.form.value);
                     this.loading = false;
                 }
             );
@@ -70,7 +64,7 @@ export class AddEditComponent implements OnInit {
 
     // convenience getter for easy access to form fields
     get f() { return this.form.controls; }
-
+ 
     onSubmit() {
         this.submitted = true;
 

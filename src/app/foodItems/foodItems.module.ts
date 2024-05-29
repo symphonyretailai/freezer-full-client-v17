@@ -9,6 +9,7 @@ import { AddEditComponent } from './add-edit.component';
 import { FormsModule } from '@angular/forms';
 import { FilterPipe } from "../_pipes/filter.pipe";
 import { SortDirective } from '@app/_directives/sort.directive';
+import { TagComponent } from "./tag/tag.component";
 
 @NgModule({
     declarations: [
@@ -22,7 +23,8 @@ import { SortDirective } from '@app/_directives/sort.directive';
         ReactiveFormsModule,
         FoodItemssRoutingModule,
         FormsModule,
-        FilterPipe
+        FilterPipe,
+        TagComponent
     ]
 })
 export class FoodItemssModule { }
