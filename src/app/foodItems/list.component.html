@@ -1,0 +1,56 @@
+﻿<h1>Food items</h1>
+<div class="row">
+  <a routerLink="add" class="col btn btn-sm btn-success ml-0 mx-2 mb-2">Add Food Items</a>
+  <button type="button" class="col btn btn-sm btn-primary mb-2" (click)="exportexcel()">Export to Excel</button>
+</div>
+
+<div>
+  <input type="search" class="form-control" [(ngModel)]= "searchtext" placeholder="Filter by food name" aria-label="search"/>
+</div>
+
+<table class="table table-striped" id="excel-table">
+  <thead>
+    <tr>
+      <th style="width: 30%" scope="col" [appSort]="foodItems" data-order="desc" data-name="name">Name</th>
+      <th style="width: 5%">Quantity</th>
+      <th style="width: 15%" scope="col" [appSort]="foodItems" data-order="desc" data-name="dateFrozen">Date frozen</th>
+      <th style="width: 15%" scope="col" [appSort]="foodItems" data-order="desc" data-name="freezerLocation">Freezer location</th>
+      <th style="width: 15%" scope="col" [appSort]="foodItems" data-order="desc" data-name="itemLocation">Item location</th>
+      <th style="width: 20%"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let foodItem of foodItems|filter:searchtext">
+      <td>
+        {{ foodItem.name }}
+      </td>
+      <td>{{ foodItem.quantity }}</td>
+      <td>{{ foodItem.dateFrozen }}</td>
+      <td>{{ foodItem.freezerLocation }}</td>
+      <td>{{ foodItem.itemLocation }}</td>
+      <td style="white-space: nowrap">
+        <a
+          routerLink="edit/{{ foodItem.foodItemId }}"
+          class="btn btn-sm btn-primary me-1"
+          >Edit</a
+        >
+        <button
+          (click)="deleteFoodItem(foodItem.foodItemId)"
+          class="btn btn-sm btn-danger btn-delete-foodItem"
+          [disabled]="foodItem.isDeleting"
+        >
+          <span
+            *ngIf="foodItem.isDeleting"
+            class="spinner-border spinner-border-sm"
+          ></span>
+          <span *ngIf="!foodItem.isDeleting">Delete</span>
+        </button>
+      </td>
+    </tr>
+    <tr *ngIf="!foodItems">
+      <td colspan="4" class="text-center">
+        <span class="spinner-border spinner-border-lg align-center"></span>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,44 @@
+﻿<!-- nav -->
+<nav class="navbar navbar-expand navbar-dark bg-dark px-3">
+  <div class="navbar-nav">
+    <a
+      class="nav-item nav-link"
+      routerLink="/"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      >Home</a
+    >
+    <a
+      class="nav-item nav-link"
+      routerLink="/foodItems"
+      routerLinkActive="active"
+      >Food Items</a
+    >
+  </div>
+</nav>
+
+<!-- main app container -->
+<div class="app-container bg-light">
+  <alert></alert>
+  <router-outlet></router-outlet>
+</div>
+
+<!-- credits -->
+<div class="text-center mt-4">
+  <p>
+    <a
+      href="https://jasonwatmore.com/post/2022/12/21/angular-17-crud-example-with-reactive-forms"
+      target="_blank"
+      >Angular 17 - CRUD Example with Reactive Forms</a
+    >
+    |
+    <a
+      href="https://jasonwatmore.es/post/2022/12/21/angular-17-ejemplo-crud-con-formularios-reactivos-reactive-forms"
+      target="_blank"
+      >En Español</a
+    >
+  </p>
+  <p>
+    <a href="https://jasonwatmore.com" target="_blank">JasonWatmore.com</a>
+  </p>
+</div>
