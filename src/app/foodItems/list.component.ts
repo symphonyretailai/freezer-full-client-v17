@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { FoodItemService, AlertService } from '../_services';
+import { FoodItemService, AlertService, DataExchangeService } from '../_services';
 import * as XLSX from 'xlsx';
 
 @Component({ templateUrl: 'list.component.html' })
@@ -11,6 +11,7 @@ export class ListComponent implements OnInit {
    
     constructor(private foodItemService: FoodItemService, 
         private alertService: AlertService,
+        private dataExchangeService: DataExchangeService,
         private router: Router,) {}
 
     ngOnInit() {
@@ -34,7 +35,17 @@ export class ListComponent implements OnInit {
       /* save to file */  
       XLSX.writeFile(wb, fileName);
   
-    }    
+    }
+
+    onEditClicked(foodItemId: number) {
+        console.log('SENDING foodItemId FROM LIST COMPONENT', foodItemId);      
+        this.dataExchangeService.sendData(foodItemId.toString());
+    }
+
+    onAddClicked() {
+        console.log('SENDING foodItemId FROM LIST COMPONENT', null);      
+        this.dataExchangeService.sendData("");
+    }
 
     deleteFoodItem(foodItemId: string) {
         const foodItem = this.foodItems.find(x => x.foodItemId === foodItemId);

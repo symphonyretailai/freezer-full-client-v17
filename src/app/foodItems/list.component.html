@@ -1,6 +1,6 @@
 ﻿<h1>Food items</h1>
 <div class="row">
-  <a routerLink="add" class="col btn btn-sm btn-success ml-0 mx-2 mb-2">Add Food Items</a>
+  <a (click)="onAddClicked()" routerLink="add" class="col btn btn-sm btn-success ml-0 mx-2 mb-2">Add Food Items</a>
   <button type="button" class="col btn btn-sm btn-primary mb-2" (click)="exportexcel()">Export to Excel</button>
 </div>
 
@@ -29,7 +29,7 @@
       <td>{{ foodItem.freezerLocation }}</td>
       <td>{{ foodItem.itemLocation }}</td>
       <td style="white-space: nowrap">
-        <a
+        <a (click)="onEditClicked(foodItem.foodItemId)"
           routerLink="edit/{{ foodItem.foodItemId }}"
           class="btn btn-sm btn-primary me-1"
           >Edit</a

@@ -16,6 +16,10 @@ export class FoodItemService {
         return this.http.get<ITag[]>(`${baseUrl}/getAllTags`);
     }
 
+    public tagsSelected(foodItemId: string):Observable<ITag[]>{
+        return this.http.get<ITag[]>(`${baseUrl}/GetTagsForFoodItem/${foodItemId}`);
+    }
+
     getAll() {
         return this.http.get<FoodItem[]>(baseUrl);
     }

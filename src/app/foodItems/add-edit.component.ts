@@ -7,6 +7,7 @@ import { itemLocationsByFreezer } from '../_helpers/data';
 import { FoodItemService, AlertService } from   '../_services';
 import { Observable, of } from 'rxjs';
 import { ItemLocations } from '../_models/itemLocations';
+import { FoodItem } from '@app/_models';
 
 @Component({ templateUrl: 'add-edit.component.html' })
 
@@ -14,10 +15,11 @@ export class AddEditComponent implements OnInit {
     form!: FormGroup;
     itemLocations$: Observable<ItemLocations[] | null> | undefined;
     foodItemId?: string;
-    name!: string;
+    formTitle!: string;
     loading = false;
     submitting = false;
     submitted = false;
+    foodItem!: FoodItem
    
     constructor(
         private formBuilder: FormBuilder,
@@ -40,15 +42,18 @@ export class AddEditComponent implements OnInit {
             itemLocation: ['']
         });
 
-        this.name = 'Add Food item';
+        this.formTitle = 'Add Food item';
         if (this.foodItemId) {
             // edit mode
-            this.name = 'Edit Food item';
+            
+            this.formTitle = 'Edit Food item';
             this.loading = true;
             this.foodItemService.getById(this.foodItemId)
                 .pipe(first())
                 .subscribe(x => {
+                    this.foodItem = x;
                     this.form.patchValue(x);
+                    console.log(this.foodItem);
                     this.loading = false;
                 }
             );
