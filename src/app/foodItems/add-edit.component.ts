@@ -1,17 +1,18 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { itemLocationsByFreezer } from '../_helpers/data';
 
-import { FoodItemService, AlertService } from   '../_services';
-import { Observable, of } from 'rxjs';
+import { FoodItemService, AlertService, DataMessagingService } from   '../_services';
+import { Observable, Subscription, of } from 'rxjs';
 import { ItemLocations } from '../_models/itemLocations';
 import { FoodItem } from '@app/_models';
+import { ITag } from '@app/_models/ITag';
 
 @Component({ templateUrl: 'add-edit.component.html' })
 
-export class AddEditComponent implements OnInit {
+export class AddEditComponent implements OnInit, OnDestroy {
     form!: FormGroup;
     itemLocations$: Observable<ItemLocations[] | null> | undefined;
     foodItemId?: string;
@@ -20,13 +21,17 @@ export class AddEditComponent implements OnInit {
     submitting = false;
     submitted = false;
     foodItem!: FoodItem
+    private subscription: Subscription = new Subscription();
+    tagIds: string = '';
+    selectedTags: Array<ITag> = [];
    
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         private foodItemService: FoodItemService,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private messageService: DataMessagingService<string>
     ) {}
 
     ngOnInit() {
@@ -48,6 +53,9 @@ export class AddEditComponent implements OnInit {
             
             this.formTitle = 'Edit Food item';
             this.loading = true;
+
+
+            this.subscription.add(
             this.foodItemService.getById(this.foodItemId)
                 .pipe(first())
                 .subscribe(x => {
@@ -56,8 +64,23 @@ export class AddEditComponent implements OnInit {
                     console.log(this.foodItem);
                     this.loading = false;
                 }
-            );
+            ));
         }
+
+        this.subscription.add(
+            this.messageService.data$.subscribe({
+              next: (data: string) => {
+                this.tagIds = data;
+              },
+              error: (error: any) => {
+                console.log(error);
+              },
+              complete: () => {
+                console.log('complete');
+              }
+            })
+          );
+
     }
 
     get itemLocationsByFreezerLocation(){
@@ -99,8 +122,28 @@ export class AddEditComponent implements OnInit {
     private saveFoodItems() {
         // create or update FoodItems based on id param
         console.log(this.form.value);
-        return this.foodItemId
+
+        // Add the selected tags to the form value by converting the tagIds string to an array of selected Tag objects
+        // the Tag.FoodItemId is set to the foodItemId, igoring the tagName
+
+        this.selectedTags = this.tagIds.split(',').map((tagId) => {
+            return { tagId: parseInt(tagId), tagName: '', foodItemId: this.foodItemId };
+        });
+
+        // Add the selected tags to the form value
+        this.form.value.tags = this.selectedTags;
+
+        console.log("Selected Tags: ", this.selectedTags);
+
+         return this.foodItemId
             ? this.foodItemService.update(this.foodItemId, this.form.value)
             : this.foodItemService.create(this.form.value);
     }
+
+
+    public ngOnDestroy() {
+        if (this.subscription) {
+          this.subscription.unsubscribe();
+        }
+      }
 }

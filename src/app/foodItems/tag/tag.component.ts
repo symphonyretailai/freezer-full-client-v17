@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ITag } from '@app/_models/ITag';
-import { FoodItemService, DataExchangeService } from '../../_services';
+import { FoodItemService, DataMessagingService } from '../../_services';
 import { Subscription } from 'rxjs';
 import { NgFor } from '@angular/common';
 
@@ -17,6 +17,7 @@ export class TagComponent implements OnInit, OnDestroy{
 
   public tags: Array<ITag> = [];
   public selectedTags: Array<ITag> = [];
+  public selectedTagIds: Array<string> = [];
   data: string = '';
 
   public markSelected(tag: ITag) {
@@ -31,19 +32,20 @@ export class TagComponent implements OnInit, OnDestroy{
       this.selectedTags.push(tag);
     }
     console.log(this.selectedTags.length);
+    this.selectedTagIds = this.selectedTags.map((t) => t.tagId.toString());
+    this.messageService.sendData(this.selectedTagIds.join(', ')); // Join the selectedTagIds array into a single string
   }
 
   constructor(private foodItemService: FoodItemService, 
-    private cdr:ChangeDetectorRef,
-    private dataExchangeService: DataExchangeService) {   
+    private messageService: DataMessagingService<string>) {   
   }
   ngOnInit() {
     this.loadTags();
+
     this.dataSubscription.add(
-      this.dataExchangeService.data$.subscribe({
+      this.messageService.data$.subscribe({
         next: (data: string) => {
           this.data = data;
-          this.dataSubscription.unsubscribe();
         },
         error: (error: any) => {
           console.log(error);

@@ -4,11 +4,11 @@ import { ReplaySubject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class DataExchangeService {
-  private data = new ReplaySubject<string>();
+export class DataMessagingService<T> {
+  private data = new ReplaySubject<T>();
   data$ = this.data.asObservable();
 
-  sendData(data: string) {
+  sendData(data: T) {
     console.log('Sending data from dataExchangeService', data);
     this.data.next(data);
   }

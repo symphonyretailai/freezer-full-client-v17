@@ -1,17 +1,20 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnDestroy, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { FoodItemService, AlertService, DataExchangeService } from '../_services';
+import { FoodItemService, AlertService, DataMessagingService } from '../_services';
 import * as XLSX from 'xlsx';
+import { Subscription } from 'rxjs';
 
 @Component({ templateUrl: 'list.component.html' })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
     foodItems!: any[];
     searchtext: any;
+    private subscription: Subscription = new Subscription();
    
     constructor(private foodItemService: FoodItemService, 
         private alertService: AlertService,
-        private dataExchangeService: DataExchangeService,
+        private messageService: DataMessagingService<string>,
+
         private router: Router,) {}
 
     ngOnInit() {
@@ -39,21 +42,30 @@ export class ListComponent implements OnInit {
 
     onEditClicked(foodItemId: number) {
         console.log('SENDING foodItemId FROM LIST COMPONENT', foodItemId);      
-        this.dataExchangeService.sendData(foodItemId.toString());
+        this.messageService.sendData(foodItemId.toString());
     }
 
     onAddClicked() {
         console.log('SENDING foodItemId FROM LIST COMPONENT', null);      
-        this.dataExchangeService.sendData("");
+        this.messageService.sendData("");
     }
 
     deleteFoodItem(foodItemId: string) {
         const foodItem = this.foodItems.find(x => x.foodItemId === foodItemId);
         foodItem.isDeleting = true;
+
+        this.subscription.add(
         this.foodItemService.delete(foodItemId)
             .pipe(first())
-            .subscribe(() => this.foodItems = this.foodItems.filter(x => x.foodItemId !== foodItemId));
-            this.alertService.success('Food item deleted', { keepAfterRouteChange: true, autoClose: true});
-            this.router.navigateByUrl('/foodItems');
+            .subscribe(() => this.foodItems = this.foodItems.filter(x => x.foodItemId !== foodItemId)
+        ));
+
+        this.alertService.success('Food item deleted', { keepAfterRouteChange: true, autoClose: true});
+        this.router.navigateByUrl('/foodItems');
     }
+    public ngOnDestroy() {
+        if (this.subscription) {
+          this.subscription.unsubscribe();
+        }
+      }
 }
