@@ -35,15 +35,18 @@ export class AddEditComponent implements OnInit, OnDestroy {
     private router: Router,
     private foodItemService: FoodItemService,
     private alertService: AlertService,
-    private messageService: DataMessagingService<string>
+    private messageService: DataMessagingService
   ) {}
 
   ngOnInit() {
-    // get this.foodItemId from the measage service
+    // get this.foodItemId from the message service
     this.subscription.add(
       this.messageService.data$.subscribe({
-        next: (data: string) => {
-          this.foodItemId = data;
+        next: (message: { sender: string, recipient:string, data: string}) => {
+          if (message.sender === "ListComponent" && message.recipient === 'AddEditComponent') {
+          this.foodItemId = message.data;
+          console.log('data from message service: ', this.foodItemId);
+          }
         },
         error: (error: any) => {
           console.log(error);
@@ -85,14 +88,16 @@ export class AddEditComponent implements OnInit, OnDestroy {
             this.form.patchValue(x);
             console.log(this.foodItem);
             this.loading = false;
+            this.tagIds = this.foodItem?.tags?.map((t) => t.tagId.toString()).join(',') ?? '';
           })
       );
     }
 
     this.subscription.add(
       this.messageService.data$.subscribe({
-        next: (data: string) => {
-          this.tagIds = data;
+        next: (message: { sender:string, recipient:string, data: string}) => {
+          if (message.sender === "TagComponent" && message.recipient === 'AddEditComponent') { 
+          this.tagIds = message.data;}
         },
         error: (error: any) => {
           console.log(error);

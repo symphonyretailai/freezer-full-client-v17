@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+import { ReplaySubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class DataMessagingService<T> {
-  private data = new ReplaySubject<T>();
+export class DataMessagingService {
+  private data = new ReplaySubject<{ sender: string, recipient: string, data: string }>();
   data$ = this.data.asObservable();
 
-  sendData(data: T) {
-    console.log('Sending data from dataExchangeService', data);
-    this.data.next(data);
+  sendData(sender: string, recipient: string, data: string) {
+    console.log('Sending data from dataExchangeService sender: ', sender, ' recipient: ', recipient, " data: ", data);
+    this.data.next({ sender, recipient, data });
   }
 }

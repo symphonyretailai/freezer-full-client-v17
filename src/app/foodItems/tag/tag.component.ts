@@ -18,11 +18,17 @@ export class TagComponent implements OnInit, OnDestroy{
   public tags: Array<ITag> = [];
   public selectedTags: Array<ITag> = [];
   public selectedTagIds: Array<string> = [];
+  public selectedFoodItemId: string = '';
+  public selectedTagsString: string = '';
   data: string = '';
 
   public markSelected(tag: ITag) {
     // check if tag exists in selected tags then set the checkbox to checked
     return this.selectedTags.some((t) => t.tagId === tag.tagId);
+  }
+
+  updateSelectedTags(tags: string[]) {
+    this.selectedTagsString = tags.join(', ');
   }
 
   public onCheckboxClick(tag: ITag) {
@@ -33,19 +39,23 @@ export class TagComponent implements OnInit, OnDestroy{
     }
     console.log(this.selectedTags.length);
     this.selectedTagIds = this.selectedTags.map((t) => t.tagId.toString());
-    this.messageService.sendData(this.selectedTagIds.join(', ')); // Join the selectedTagIds array into a single string
+    this.updateSelectedTags(this.selectedTagIds);
+    this.messageService.sendData("TagComponent", "AddEditComponent", this.selectedTagsString);
   }
 
   constructor(private foodItemService: FoodItemService, 
-    private messageService: DataMessagingService<string>) {   
+    private messageService: DataMessagingService) {   
   }
   ngOnInit() {
-    this.loadTags();
 
+    // get this.foodItemId from the message service
     this.dataSubscription.add(
       this.messageService.data$.subscribe({
-        next: (data: string) => {
-          this.data = data;
+        next: (message: { recipient:string, data: string}) => {
+          if (message.recipient === 'TagComponent') {          
+            this.data = message.data;
+            this.selectedFoodItemId = this.data;
+            console.log('data from message service: ', this.data);}
         },
         error: (error: any) => {
           console.log(error);
@@ -56,18 +66,22 @@ export class TagComponent implements OnInit, OnDestroy{
       })
     );
 
-    this.loadSelectedTags(this.data);
+    this.loadTags();
+
+    this.loadSelectedTags();
   }
 
-  private loadSelectedTags(foodItemId: string) {
-    if (!foodItemId) {
+  private loadSelectedTags() {
+    if (!this.selectedFoodItemId) {
       return;
     }
     
     this.subscription.add(
-      this.foodItemService.tagsSelected(foodItemId).subscribe({
+      this.foodItemService.tagsSelected(this.selectedFoodItemId).subscribe({
         next: (tags: ITag[]) => {
           this.selectedTags = tags;
+          this.updateSelectedTags(this.selectedTags.map((t) => t.tagId.toString()));
+          this.messageService.sendData("TagComponent", "AddEditComponent", this.selectedTagsString);
         }
       })
     );

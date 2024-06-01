@@ -1,4 +1,5 @@
-<p>FoodItemId : {{data}} </p>
+<p>FoodItemId : {{selectedFoodItemId}} </p>
+<p>Selected Tags : {{selectedTagsString}}</p>
 
 <div *ngFor="let selectedTag of selectedTags">
     <span class="badge bg-primary">{{selectedTag.tagName}}</span>

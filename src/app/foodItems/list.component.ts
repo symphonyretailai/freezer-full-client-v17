@@ -20,7 +20,7 @@ export class ListComponent implements OnInit, OnDestroy {
    
     constructor(private foodItemService: FoodItemService, 
         private alertService: AlertService,
-        private messageService: DataMessagingService<string>,
+        private messageService: DataMessagingService,
 
         private router: Router,) {}
 
@@ -49,12 +49,14 @@ export class ListComponent implements OnInit, OnDestroy {
 
     onEditClicked(foodItemId: number) {
         console.log('SENDING foodItemId FROM LIST COMPONENT', foodItemId);      
-        this.messageService.sendData(foodItemId.toString());
+        this.messageService.sendData("ListComponent", "AddEditComponent", foodItemId.toString());
+        this.messageService.sendData("ListComponent", "TagComponent", foodItemId.toString());
     }
 
     onAddClicked() {
         console.log('SENDING foodItemId FROM LIST COMPONENT', null);      
-        this.messageService.sendData("");
+        this.messageService.sendData("ListComponent", "AddEditComponent","");
+        this.messageService.sendData("ListComponent", "TagComponent", "");
     }
 
     deleteFoodItem(foodItemId: string) {
