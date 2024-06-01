@@ -27,4 +27,4 @@ import { TagComponent } from "./tag/tag.component";
         TagComponent
     ]
 })
-export class FoodItemssModule { }
+export class FoodItemsModule { }

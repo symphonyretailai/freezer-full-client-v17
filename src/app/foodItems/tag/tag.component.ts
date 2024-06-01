@@ -60,6 +60,10 @@ export class TagComponent implements OnInit, OnDestroy{
   }
 
   private loadSelectedTags(foodItemId: string) {
+    if (!foodItemId) {
+      return;
+    }
+    
     this.subscription.add(
       this.foodItemService.tagsSelected(foodItemId).subscribe({
         next: (tags: ITag[]) => {

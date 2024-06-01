@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { HomeComponent } from './home';
 
-const foodItemsModule = () => import('./foodItems/foodItems.module').then(x => x.FoodItemssModule);
+const foodItemsModule = () => import('./foodItems/foodItems.module').then(x => x.FoodItemsModule);
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
