@@ -2,6 +2,7 @@
 <div class="row">
   <a (click)="onAddClicked()" routerLink="add" class="col btn btn-sm btn-success ml-0 mx-2 mb-2">Add Food Items</a>
   <button type="button" class="col btn btn-sm btn-primary mb-2" (click)="exportexcel()">Export to Excel</button>
+  <button class="btn btn-sm btn-primary" (click)="toggleTags()">Toggle Tags</button>
 </div>
 
 <div>
@@ -16,7 +17,6 @@
       <th style="width: 15%" scope="col" [appSort]="foodItems" data-order="desc" data-name="dateFrozen">Date frozen</th>
       <th style="width: 15%" scope="col" [appSort]="foodItems" data-order="desc" data-name="freezerLocation">Freezer location</th>
       <th style="width: 15%" scope="col" [appSort]="foodItems" data-order="desc" data-name="itemLocation">Item location</th>
-      <th style="width: 20%"></th>
     </tr>
   </thead>
   <tbody>
@@ -45,6 +45,16 @@
           ></span>
           <span *ngIf="!foodItem.isDeleting">Delete</span>
         </button>
+        <button class="btn btn-sm btn-primary ms-1">
+          {{foodItem.tags.length > 0 ? foodItem.tags.length : '' }}
+        </button> 
+
+        <div *ngIf="showTags" class="tag-box">
+          <ul>
+            <li *ngFor="let tag of foodItem.tags">{{tag?.tagName}}</li>
+          </ul>
+        </div>
+
       </td>
     </tr>
     <tr *ngIf="!foodItems">

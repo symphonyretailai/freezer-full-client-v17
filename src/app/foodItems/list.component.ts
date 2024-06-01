@@ -4,11 +4,18 @@ import { Router } from '@angular/router';
 import { FoodItemService, AlertService, DataMessagingService } from '../_services';
 import * as XLSX from 'xlsx';
 import { Subscription } from 'rxjs';
+import { FoodItem } from '@app/_models';
 
 @Component({ templateUrl: 'list.component.html' })
 export class ListComponent implements OnInit, OnDestroy {
     foodItems!: any[];
     searchtext: any;
+    showTags = false;
+
+    toggleTags() {
+        this.showTags = !this.showTags;
+    }
+
     private subscription: Subscription = new Subscription();
    
     constructor(private foodItemService: FoodItemService, 

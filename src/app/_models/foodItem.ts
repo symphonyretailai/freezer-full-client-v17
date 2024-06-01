@@ -12,4 +12,5 @@ export class FoodItem {
 export interface IFoodItemTag {
     foodItemId: number;
     tagId: number;
+    tagName: string;
 }
