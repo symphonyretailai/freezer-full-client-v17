@@ -9,6 +9,15 @@
   <input type="search" class="form-control" [(ngModel)]= "searchtext" placeholder="Filter by food name" aria-label="search"/>
 </div>
 
+<!-- <div style="display: flex; flex-wrap: wrap;">
+  <select [(ngModel)]="selectedTag" (change)="onSelectFilterTag(selectedTag)">
+    <option *ngFor="let tag of distinctTags" [ngValue]="tag">{{ tag.tagName }}</option>
+  </select>
+  <div *ngFor="let tag of selectedTags">
+  <span *ngIf="selectedTag" class="badge bg-primary" style="margin-left: 10px;">{{selectedTag.tagName}}</span>
+  </div> 
+</div> -->
+
 <table class="table table-striped" id="excel-table">
   <thead>
     <tr>
@@ -46,7 +55,7 @@
           <span *ngIf="!foodItem.isDeleting">Delete</span>
         </button>
         <button class="btn btn-sm btn-primary ms-1">
-          {{foodItem.tags.length > 0 ? foodItem.tags.length : '' }}
+          {{foodItem.tags!.length > 0 ? foodItem.tags!.length : '' }}
         </button> 
 
         <div *ngIf="showTags" class="tag-box">

@@ -18,7 +18,7 @@ import { ITag } from '@app/_models/ITag';
 export class AddEditComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   itemLocations$: Observable<ItemLocations[] | null> | undefined;
-  foodItemId?: string;
+  foodItemId?: number;
   formTitle!: string;
   loading = false;
   submitting = false;
@@ -44,8 +44,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
       this.messageService.data$.subscribe({
         next: (message: { sender: string, recipient:string, data: string}) => {
           if (message.sender === "ListComponent" && message.recipient === 'AddEditComponent') {
-          this.foodItemId = message.data;
-          console.log('data from message service: ', this.foodItemId);
+          this.foodItemId = +message.data;
           }
         },
         error: (error: any) => {
@@ -86,7 +85,6 @@ export class AddEditComponent implements OnInit, OnDestroy {
           .subscribe((x) => {
             this.foodItem = x;
             this.form.patchValue(x);
-            console.log(this.foodItem);
             this.loading = false;
             this.tagIds = this.foodItem?.tags?.map((t) => t.tagId.toString()).join(',') ?? '';
           })
@@ -151,11 +149,10 @@ export class AddEditComponent implements OnInit, OnDestroy {
 
   private saveFoodItems() {
     // create or update FoodItems based on id param
-    console.log(this.form.value);
 
     // Add the selected tags to the form value by converting the tagIds string to an array of selected Tag objects
     // the Tag.FoodItemId is set to the foodItemId, ignoring the tagName
-    if(this.newForm){this.foodItemId = '';}
+    if(this.newForm){this.foodItemId = undefined;}
 
     this.selectedTags = this.tagIds.split(',').map((tagId) => {
       return {
@@ -167,9 +164,6 @@ export class AddEditComponent implements OnInit, OnDestroy {
 
     // Add the selected tags to the form value
     this.form.value.tags = this.selectedTags;
-
-    console.log('Selected Tags: ', this.selectedTags);
-    console.log('foodItemId: ', this.foodItemId);
 
     return this.foodItemId
       ? this.foodItemService.update(this.foodItemId, this.form.value)

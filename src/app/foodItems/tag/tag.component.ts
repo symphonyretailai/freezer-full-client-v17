@@ -37,7 +37,6 @@ export class TagComponent implements OnInit, OnDestroy{
     } else {
       this.selectedTags.push(tag);
     }
-    console.log(this.selectedTags.length);
     this.selectedTagIds = this.selectedTags.map((t) => t.tagId.toString());
     this.updateSelectedTags(this.selectedTagIds);
     this.messageService.sendData("TagComponent", "AddEditComponent", this.selectedTagsString);
@@ -54,8 +53,7 @@ export class TagComponent implements OnInit, OnDestroy{
         next: (message: { recipient:string, data: string}) => {
           if (message.recipient === 'TagComponent') {          
             this.data = message.data;
-            this.selectedFoodItemId = this.data;
-            console.log('data from message service: ', this.data);}
+            this.selectedFoodItemId = this.data;}
         },
         error: (error: any) => {
           console.log(error);

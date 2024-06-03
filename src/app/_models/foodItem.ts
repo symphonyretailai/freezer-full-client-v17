@@ -1,5 +1,5 @@
 export class FoodItem {
-    id?: number;
+    foodItemId!: number;
     name?: string;
     description?: string
     dateFrozen?: Date;
@@ -7,6 +7,7 @@ export class FoodItem {
     freezerLocation?: string;
     itemLocation?: string;
     tags?: IFoodItemTag[];
+    isDeleting?: boolean;
 }
 
 export interface IFoodItemTag {
