@@ -1,6 +1,4 @@
 ﻿<h1>{{ formTitle }}</h1>
-<h1>foodItemId: {{ foodItemId }}</h1>
-<h1>tagIds: {{tagIds}}</h1>
 <div class="container-fluid mt-3">
   <div class="row">
     <div class="col-sm-4 p-3">
@@ -95,12 +93,9 @@
               formControlName="itemLocation"
             >
               <option [ngValue]="null">Item location</option>
-              @for (itemLocation of itemLocationsByFreezerLocation; track
-              itemLocation){
-              <option>
+              <option *ngFor="let itemLocation of itemLocationsByFreezerLocation" [value]="itemLocation">
                 {{ itemLocation }}
               </option>
-              }
             </select>
           </div>
         </div>
