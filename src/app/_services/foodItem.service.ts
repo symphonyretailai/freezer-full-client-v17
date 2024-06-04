@@ -5,9 +5,7 @@ import{ FoodItem } from '../_models'
 import { ITag } from '@app/_models/ITag';
 import { Observable } from 'rxjs';
 
-//const baseUrl = 'https://freezer-full.azurewebsites.net/FoodItems';
-const baseUrl = 'https://localhost:52352/FoodItems';
-
+const baseUrl = 'https://freezer-full.azurewebsites.net/FoodItems';
 
 @Injectable({ providedIn: 'root' })
 export class FoodItemService {
