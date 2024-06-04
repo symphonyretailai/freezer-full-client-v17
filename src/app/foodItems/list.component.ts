@@ -17,8 +17,9 @@ export class ListComponent implements OnInit, OnDestroy {
   searchtext: any;
   showTags = false;
   distinctTags: ITag[] = [];
-  selectedTag!: ITag;
-  selectedTags: string[] = [];
+  selectedTag: ITag = { tagId: 0, tagName: '' };
+  selectedTags: Array<ITag> = [];
+  filteredItems: FoodItem[] = [];
 
   toggleTags() {
     this.showTags = !this.showTags;
@@ -40,8 +41,23 @@ export class ListComponent implements OnInit, OnDestroy {
       .pipe(first())
       .subscribe((foodItems) => {
         this.foodItems = foodItems;
+        this.filteredItems = foodItems;
         this.createDistinctTags();
       });
+  }
+
+  public onSelectFilterTag(tag: ITag) {
+    const index = this.selectedTags.findIndex((t) => t.tagId === tag.tagId);
+    if(index === -1 &&  tag.tagName !== ''){
+      // clear all selected tags
+      this.selectedTags = [];
+    }
+    if (index !== -1) {
+      this.selectedTags.splice(index, 1);
+    } else {
+      this.selectedTags.push(tag);
+      this.selectedTag = tag;
+    }
   }
 
   createDistinctTags() {
@@ -52,11 +68,6 @@ export class ListComponent implements OnInit, OnDestroy {
         this.distinctTags = tags;
       });
   }
-
-  public onSelectFilterTag(tag: ITag) {
-    this.selectedTags.push(tag.tagName);
-  }
-
 
   exportexcel(): void {
     const fileName = 'freezer-items' + new Date().toLocaleString() + '.xlsx';

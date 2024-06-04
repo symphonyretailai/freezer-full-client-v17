@@ -5,18 +5,19 @@
   <button class="btn btn-sm btn-primary" (click)="toggleTags()">Toggle Tags</button>
 </div>
 
-<div>
+<div class="row">
   <input type="search" class="form-control" [(ngModel)]= "searchtext" placeholder="Filter by food name" aria-label="search"/>
 </div>
 
-<!-- <div style="display: flex; flex-wrap: wrap;">
+<div style="display: flex; flex-wrap: wrap;">
   <select [(ngModel)]="selectedTag" (change)="onSelectFilterTag(selectedTag)">
+    <option value="">Filter by tag</option>
     <option *ngFor="let tag of distinctTags" [ngValue]="tag">{{ tag.tagName }}</option>
   </select>
   <div *ngFor="let tag of selectedTags">
-  <span *ngIf="selectedTag" class="badge bg-primary" style="margin-left: 10px;">{{selectedTag.tagName}}</span>
-  </div> 
-</div> -->
+    <span class="badge bg-primary" style="margin-right: 10px;">{{tag.tagName}}</span>
+  </div>
+</div>
 
 <table class="table table-striped" id="excel-table">
   <thead>
@@ -29,7 +30,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let foodItem of foodItems|filter:searchtext">
+    <tr *ngFor="let foodItem of filteredItems | filter:searchtext | filterByTag: selectedTag.tagId">
       <td>
         {{ foodItem.name }}
       </td>

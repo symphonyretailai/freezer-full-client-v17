@@ -6,12 +6,12 @@ import { FoodItem } from '@app/_models';
   standalone: true
 })
 export class FilterByTagPipe implements PipeTransform {
-  transform(foodItems: FoodItem[], tagNames: string[]): FoodItem[] {
-    if (!foodItems || !tagNames || tagNames.length === 0) {
-      return foodItems;
-    }
+  transform(foodItems: FoodItem[], tagId: number): FoodItem[] {
+    if (!foodItems ) return [];
+    if (tagId == 0 || tagId == undefined) return foodItems;
+
     return foodItems.filter(foodItem => 
-      foodItem.tags?.some(tag => tagNames.includes(tag.tagName)
-    ));
+      foodItem.tags?.some(tag => tag && tag.tagId === tagId)
+    );
   }
 }
