@@ -5,7 +5,9 @@ import{ FoodItem } from '../_models'
 import { ITag } from '@app/_models/ITag';
 import { Observable } from 'rxjs';
 
-const baseUrl = 'https://freezer-full.azurewebsites.net/FoodItems';
+//const baseUrl = 'https://freezer-full.azurewebsites.net/FoodItems';
+const baseUrl = 'https://localhost:52352/FoodItems';
+
 
 @Injectable({ providedIn: 'root' })
 export class FoodItemService {
@@ -41,5 +43,9 @@ export class FoodItemService {
 
     getAllTags() {
         return this.http.get<ITag[]>(`${baseUrl}/getAllTags`);
+    }
+
+    addTag(tagName: string) {
+        return this.http.post(`${baseUrl}/createTag/${tagName}`, {});
     }
 }

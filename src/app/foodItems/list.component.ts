@@ -16,13 +16,35 @@ export class ListComponent implements OnInit, OnDestroy {
   foodItems!: FoodItem[];
   searchtext: any;
   showTags = false;
+  showTagInput = false;
   distinctTags: ITag[] = [];
   selectedTag: ITag = { tagId: 0, tagName: '' };
   selectedTags: Array<ITag> = [];
   filteredItems: FoodItem[] = [];
+  newTagName = '';
 
   toggleTags() {
     this.showTags = !this.showTags;
+  }
+
+  toggleTagInput() {
+    this.showTagInput = !this.showTagInput;
+  }
+
+  addNewTag(tagName: string){
+    // create a new ITag assign tagName to the new tag tagName property and save new tag to the database
+    const newTag: ITag = { tagId: 0, tagName: tagName }; 
+    this.subscription.add(
+      this.foodItemService
+        .addTag(newTag.tagName)
+        .pipe(first())
+        .subscribe((tag) => {
+          this.distinctTags.push(newTag);
+          this.newTagName = '';
+          this.alertService.success('Tag added');
+          this.toggleTagInput();
+        })
+    );
   }
 
   private subscription: Subscription = new Subscription();

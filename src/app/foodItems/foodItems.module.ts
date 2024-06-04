@@ -10,6 +10,7 @@ import { FilterPipe } from "../_pipes/filter.pipe";
 import { SortDirective } from '@app/_directives/sort.directive';
 import { TagComponent } from "./tag/tag.component";
 import { FilterByTagPipe } from "../_pipes/filter-by-tag.pipe";
+import { AddEditTagComponent } from "./add-edit-tag/add-edit-tag.component";
 
 @NgModule({
     declarations: [
@@ -25,7 +26,8 @@ import { FilterByTagPipe } from "../_pipes/filter-by-tag.pipe";
         FormsModule,
         FilterPipe,
         TagComponent,
-        FilterByTagPipe
+        FilterByTagPipe,
+        AddEditTagComponent
     ]
 })
 export class FoodItemsModule { }

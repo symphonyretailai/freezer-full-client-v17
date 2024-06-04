@@ -1,11 +1,17 @@
 ﻿<h1>Food items</h1>
 <div class="row">
   <a (click)="onAddClicked()" routerLink="add" class="col btn btn-sm btn-success ml-0 mx-2 mb-2">Add Food Items</a>
-  <button type="button" class="col btn btn-sm btn-primary mb-2" (click)="exportexcel()">Export to Excel</button>
-  <button class="btn btn-sm btn-primary" (click)="toggleTags()">Toggle Tags</button>
+  <button type="button" class="col btn btn-sm btn-primary mx-2 mb-2" (click)="exportexcel()">Export to Excel</button>
+  <button class="col btn btn-sm btn-primary mx-2 mb-2" (click)="toggleTags()">Toggle Tags</button>
+  <button class="col btn btn-sm btn-primary mx-2 mb-2" (click)="toggleTagInput()">Add New Tag</button>
 </div>
 
-<div class="row">
+<div *ngIf="showTagInput" class="tag-box">
+  <input type="text" [(ngModel)]="newTagName" placeholder="Add new tag" />
+  <button (click)="addNewTag(newTagName)">Add</button>
+</div>
+
+<div class="row mx-2 mb-2">
   <input type="search" class="form-control" [(ngModel)]= "searchtext" placeholder="Filter by food name" aria-label="search"/>
 </div>
 
@@ -64,7 +70,6 @@
             <li *ngFor="let tag of foodItem.tags">{{tag?.tagName}}</li>
           </ul>
         </div>
-
       </td>
     </tr>
     <tr *ngIf="!foodItems">

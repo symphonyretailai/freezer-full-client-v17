@@ -3,11 +3,12 @@ import { ITag } from '@app/_models/ITag';
 import { FoodItemService, DataMessagingService } from '../../_services';
 import { Subscription } from 'rxjs';
 import { NgFor } from '@angular/common';
+import { AddEditTagComponent } from '../add-edit-tag/add-edit-tag.component';
 
 @Component({
   selector: 'app-tag',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, AddEditTagComponent],
   templateUrl: './tag.component.html',
   styleUrl: './tag.component.less',
 })
