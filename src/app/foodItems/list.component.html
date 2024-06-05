@@ -47,12 +47,12 @@
       <td style="white-space: nowrap">
         <a (click)="onEditClicked(foodItem.foodItemId)"
           routerLink="edit/{{ foodItem.foodItemId }}"
-          class="btn btn-sm btn-primary me-1"
+          class="btn btn-sm btn-primary"
           >Edit</a
         >
         <button
           (click)="deleteFoodItem(foodItem.foodItemId)"
-          class="btn btn-sm btn-danger btn-delete-foodItem"
+          class="btn btn-sm btn-danger btn-delete-foodItem" 
           [disabled]="foodItem.isDeleting"
         >
           <span
@@ -61,7 +61,7 @@
           ></span>
           <span *ngIf="!foodItem.isDeleting">Delete</span>
         </button>
-        <button class="btn btn-sm btn-primary ms-1">
+        <button class="btn btn-sm btn-primary">
           {{foodItem.tags!.length > 0 ? foodItem.tags!.length : '' }}
         </button> 
 
