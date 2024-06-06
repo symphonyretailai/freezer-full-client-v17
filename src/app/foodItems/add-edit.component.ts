@@ -28,10 +28,10 @@ export class AddEditComponent implements OnInit, OnDestroy {
   tagIds: string = '';
   selectedTags: Array<ITag> = [];
   newForm = true;
+  tagsSelected = this.tagIds.length > 0;;
 
   constructor(
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
     private router: Router,
     private foodItemService: FoodItemService,
     private alertService: AlertService,
@@ -45,6 +45,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
         next: (message: { sender: string, recipient:string, data: string}) => {
           if (message.sender === "ListComponent" && message.recipient === 'AddEditComponent') {
           this.foodItemId = +message.data;
+          this.tagIds = '';
           }
         },
         error: (error: any) => {
@@ -67,10 +68,11 @@ export class AddEditComponent implements OnInit, OnDestroy {
       ],
       quantity: ['', [Validators.required, Validators.minLength(1)]],
       freezerLocation: ['', [Validators.required, Validators.minLength(3)]],
-      itemLocation: [''],
+      itemLocation: ['', [Validators.required, Validators.minLength(3)]]
     });
 
     this.formTitle = 'Add Food item';
+    this.tagIds = '';
     if (this.foodItemId) {
       // edit mode
         
@@ -95,7 +97,10 @@ export class AddEditComponent implements OnInit, OnDestroy {
       this.messageService.data$.subscribe({
         next: (message: { sender:string, recipient:string, data: string}) => {
           if (message.sender === "TagComponent" && message.recipient === 'AddEditComponent') { 
-          this.tagIds = message.data;}
+          this.tagIds = message.data;
+          // if the tagIds are not empty set tagsSelected to true
+          this.tagsSelected = this.tagIds.length > 0;
+          }
         },
         error: (error: any) => {
           console.log(error);
@@ -138,6 +143,7 @@ export class AddEditComponent implements OnInit, OnDestroy {
             this.foodItemId ? 'Food item updated' : 'Food item saved',
             { keepAfterRouteChange: true, autoClose: true }
           );
+          this.tagIds = '';
           this.router.navigateByUrl('/foodItems');
         },
         error: (error: string) => {
@@ -152,9 +158,12 @@ export class AddEditComponent implements OnInit, OnDestroy {
 
     // Add the selected tags to the form value by converting the tagIds string to an array of selected Tag objects
     // the Tag.FoodItemId is set to the foodItemId, ignoring the tagName
-    if(this.newForm){this.foodItemId = undefined;}
+    if(this.newForm){
+      this.foodItemId = undefined;
+    }
 
     this.selectedTags = this.tagIds.split(',').map((tagId) => {
+
       return {
         tagId: parseInt(tagId),
         tagName: '',
@@ -169,10 +178,11 @@ export class AddEditComponent implements OnInit, OnDestroy {
       ? this.foodItemService.update(this.foodItemId, this.form.value)
       : this.foodItemService.create(this.form.value);
   }
-
+  
   public ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
 }
+

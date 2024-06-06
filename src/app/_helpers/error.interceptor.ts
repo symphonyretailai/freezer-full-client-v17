@@ -15,6 +15,11 @@ export class ErrorInterceptor implements HttpInterceptor {
                 // This is an OK response, not an error. Don't throw an error.
                 return of(err);
             }
+
+            if(err.status === 500 && err.statusText === 'OK' && err.error && "SQLite Error 19: 'FOREIGN KEY constraint failed'"){
+                this.alertService.error("This item is in use and cannot be deleted.", { autoClose: true });
+                return throwError(() => err);
+            }
     
             const error = err.error?.message || err.statusText;
             this.alertService.error(error);

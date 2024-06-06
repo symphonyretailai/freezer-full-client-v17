@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ITag } from '@app/_models/ITag';
-import { FoodItemService, DataMessagingService } from '../../_services';
+import { FoodItemService, DataMessagingService, AlertService } from '../../_services';
 import { Subscription } from 'rxjs';
 import { NgFor } from '@angular/common';
 
@@ -12,6 +12,7 @@ import { NgFor } from '@angular/common';
   styleUrl: './tag.component.less',
 })
 export class TagComponent implements OnInit, OnDestroy{
+
   private subscription: Subscription = new Subscription();
   private dataSubscription: Subscription = new Subscription();
 
@@ -42,8 +43,26 @@ export class TagComponent implements OnInit, OnDestroy{
     this.messageService.sendData("TagComponent", "AddEditComponent", this.selectedTagsString);
   }
 
+  deleteTag(tagId: number) {
+    this.subscription.add(
+      this.foodItemService.delete(tagId).subscribe({
+        next: () => {
+          this.loadTags();
+          this.alertService.success('Food item deleted', {
+            keepAfterRouteChange: true,
+            autoClose: true,
+          });
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      })
+    );
+  }
+
   constructor(private foodItemService: FoodItemService, 
-    private messageService: DataMessagingService) {   
+    private messageService: DataMessagingService,
+    private alertService: AlertService) {   
   }
   ngOnInit() {
 

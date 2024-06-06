@@ -11,14 +11,7 @@ const baseUrl = 'https://freezer-full.azurewebsites.net/FoodItems';
 export class FoodItemService {
     constructor(private http: HttpClient) { }
 
-    public tagList():Observable<ITag[]>{
-        return this.http.get<ITag[]>(`${baseUrl}/getAllTags`);
-    }
-
-    public tagsSelected(foodItemId: string):Observable<ITag[]>{
-        return this.http.get<ITag[]>(`${baseUrl}/GetTagsForFoodItem/${foodItemId}`);
-    }
-
+    // Food Items
     getAll() {
         return this.http.get<FoodItem[]>(baseUrl);
     }
@@ -39,6 +32,11 @@ export class FoodItemService {
         return this.http.delete(`${baseUrl}/${id}`);
     }
 
+    // Tags
+    deleteTag(id: number) {
+        return this.http.delete(`${baseUrl}/DeleteTag/${id}`);
+    }
+
     getAllTags() {
         return this.http.get<ITag[]>(`${baseUrl}/getAllTags`);
     }
@@ -46,4 +44,13 @@ export class FoodItemService {
     addTag(tagName: string) {
         return this.http.post(`${baseUrl}/createTag/${tagName}`, {});
     }
+
+    public tagList():Observable<ITag[]>{
+        return this.http.get<ITag[]>(`${baseUrl}/getAllTags`);
+    }
+
+    public tagsSelected(foodItemId: string):Observable<ITag[]>{
+        return this.http.get<ITag[]>(`${baseUrl}/GetTagsForFoodItem/${foodItemId}`);
+    }
+
 }

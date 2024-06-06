@@ -1,5 +1,5 @@
 ﻿import { Component, OnDestroy, OnInit } from '@angular/core';
-import { first } from 'rxjs/operators';
+import { catchError, finalize, first, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import {
   FoodItemService,
@@ -7,7 +7,7 @@ import {
   DataMessagingService,
 } from '../_services';
 import * as XLSX from 'xlsx';
-import { Subscription } from 'rxjs';
+import { Subscription, throwError } from 'rxjs';
 import { FoodItem } from '@app/_models';
 import { ITag } from '@app/_models/ITag';
 
@@ -31,9 +31,9 @@ export class ListComponent implements OnInit, OnDestroy {
     this.showTagInput = !this.showTagInput;
   }
 
-  addNewTag(tagName: string){
+  addNewTag(tagName: string) {
     // create a new ITag assign tagName to the new tag tagName property and save new tag to the database
-    const newTag: ITag = { tagId: 0, tagName: tagName }; 
+    const newTag: ITag = { tagId: 0, tagName: tagName };
     this.subscription.add(
       this.foodItemService
         .addTag(newTag.tagName)
@@ -70,7 +70,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public onSelectFilterTag(tag: ITag) {
     const index = this.selectedTags.findIndex((t) => t.tagId === tag.tagId);
-    if(index === -1 &&  tag.tagName !== ''){
+    if (index === -1 && tag.tagName !== '') {
       // clear all selected tags
       this.selectedTags = [];
     }
@@ -124,27 +124,36 @@ export class ListComponent implements OnInit, OnDestroy {
     this.messageService.sendData('ListComponent', 'TagComponent', '');
   }
 
-  deleteFoodItem(foodItemId: number) {
-    this.foodItems.find((x) => x.foodItemId === foodItemId);
-
+  deleteFoodItem(foodItem: FoodItem) {
     this.subscription.add(
-      this.foodItemService
-        .delete(foodItemId)
-        .pipe(first())
-        .subscribe(
-          () =>
-            (this.foodItems = this.foodItems.filter(
-              (x) => x.foodItemId !== foodItemId
-            ))
-        )
+        this.foodItemService.delete(foodItem.foodItemId).pipe(
+            first(),
+            catchError((error) => this.handleError(error)),
+            tap(() => this.handleSuccess(foodItem)),
+            finalize(() => this.router.navigateByUrl('/foodItems'))
+        ).subscribe()
     );
+}
 
-    this.alertService.success('Food item deleted', {
-      keepAfterRouteChange: true,
-      autoClose: true,
+handleError(error: any) {
+    this.alertService.error('Error deleting food item', {
+        keepAfterRouteChange: true,
+        autoClose: true,
     });
-    this.router.navigateByUrl('/foodItems');
-  }
+    return throwError(() => new Error(error));
+}
+
+handleSuccess(foodItem: FoodItem) {
+    this.foodItems.splice(this.foodItems.indexOf(foodItem), 1)
+    this.filteredItems = this.foodItems;
+    this.searchtext = '';
+    this.selectedTags = [];
+    this.alertService.success('Food item deleted', {
+        keepAfterRouteChange: true,
+        autoClose: true,
+    });
+}
+
   public ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();

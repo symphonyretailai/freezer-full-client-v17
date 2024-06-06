@@ -101,10 +101,10 @@
         </div>
         <div class="form-group">
           <button
-            [disabled]="loading"
-            [disabled]="form.invalid"
+          [disabled]="loading || form.invalid || !tagsSelected || tagIds.length === 0"
             class="btn btn-primary"
           >
+          <p>tagsSelected {{tagsSelected}} tagIds.length {{tagIds}}</p>
             <span
               *ngIf="submitting"
               class="spinner-border spinner-border-sm me-1"
