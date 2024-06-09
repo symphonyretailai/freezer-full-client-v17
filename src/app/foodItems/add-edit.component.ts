@@ -28,10 +28,10 @@ export class AddEditComponent implements OnInit, OnDestroy {
   tagIds: string = '';
   selectedTags: Array<ITag> = [];
   newForm = true;
-  tagsSelected = this.tagIds.length > 0;;
 
   constructor(
     private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
     private router: Router,
     private foodItemService: FoodItemService,
     private alertService: AlertService,
@@ -39,23 +39,8 @@ export class AddEditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // get this.foodItemId from the message service
-    this.subscription.add(
-      this.messageService.data$.subscribe({
-        next: (message: { sender: string, recipient:string, data: string}) => {
-          if (message.sender === "ListComponent" && message.recipient === 'AddEditComponent') {
-          this.foodItemId = +message.data;
-          this.tagIds = '';
-          }
-        },
-        error: (error: any) => {
-          console.log(error);
-        },
-        complete: () => {
-          console.log('complete');
-        },
-      })
-    );
+
+    this.foodItemId = this.route.snapshot.params['id'];
 
     this.itemLocations$ = of(itemLocationsByFreezer);
 
@@ -98,8 +83,6 @@ export class AddEditComponent implements OnInit, OnDestroy {
         next: (message: { sender:string, recipient:string, data: string}) => {
           if (message.sender === "TagComponent" && message.recipient === 'AddEditComponent') { 
           this.tagIds = message.data;
-          // if the tagIds are not empty set tagsSelected to true
-          this.tagsSelected = this.tagIds.length > 0;
           }
         },
         error: (error: any) => {

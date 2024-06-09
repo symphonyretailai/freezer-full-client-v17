@@ -45,8 +45,7 @@
       <td>{{ foodItem.freezerLocation }}</td>
       <td>{{ foodItem.itemLocation }}</td>
       <td style="white-space: nowrap">
-        <a (click)="onEditClicked(foodItem.foodItemId)"
-          routerLink="edit/{{ foodItem.foodItemId }}"
+        <a routerLink="edit/{{ foodItem.foodItemId }}"
           class="btn btn-sm btn-primary"
           >Edit</a
         >

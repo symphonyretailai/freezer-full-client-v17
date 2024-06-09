@@ -3,6 +3,7 @@ import { ITag } from '@app/_models/ITag';
 import { FoodItemService, DataMessagingService, AlertService } from '../../_services';
 import { Subscription } from 'rxjs';
 import { NgFor } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-tag',
@@ -45,10 +46,10 @@ export class TagComponent implements OnInit, OnDestroy{
 
   deleteTag(tagId: number) {
     this.subscription.add(
-      this.foodItemService.delete(tagId).subscribe({
+      this.foodItemService.deleteTag(tagId).subscribe({
         next: () => {
           this.loadTags();
-          this.alertService.success('Food item deleted', {
+          this.alertService.success('Tag deleted', {
             keepAfterRouteChange: true,
             autoClose: true,
           });
@@ -62,26 +63,13 @@ export class TagComponent implements OnInit, OnDestroy{
 
   constructor(private foodItemService: FoodItemService, 
     private messageService: DataMessagingService,
-    private alertService: AlertService) {   
+    private alertService: AlertService,
+    private route: ActivatedRoute,
+    private router: Router,) {   
   }
   ngOnInit() {
 
-    // get this.foodItemId from the message service
-    this.dataSubscription.add(
-      this.messageService.data$.subscribe({
-        next: (message: { recipient:string, data: string}) => {
-          if (message.recipient === 'TagComponent') {          
-            this.data = message.data;
-            this.selectedFoodItemId = this.data;}
-        },
-        error: (error: any) => {
-          console.log(error);
-        },
-        complete: () => {
-          console.log('complete');
-        }
-      })
-    );
+    this.selectedFoodItemId = this.route.snapshot.params['id'];
 
     this.loadTags();
 
