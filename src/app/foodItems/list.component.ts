@@ -6,7 +6,7 @@ import {
   AlertService,
   DataMessagingService,
 } from '../_services';
-import * as XLSX from 'xlsx';
+
 import { Subscription, throwError } from 'rxjs';
 import { FoodItem } from '@app/_models';
 import { ITag } from '@app/_models/ITag';
@@ -91,20 +91,6 @@ export class ListComponent implements OnInit, OnDestroy {
       });
   }
 
-  exportexcel(): void {
-    const fileName = 'freezer-items' + new Date().toLocaleString() + '.xlsx';
-
-    /* pass here the table id */
-    let element = document.getElementById('excel-table');
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
-
-    /* generate workbook and add the worksheet */
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-    /* save to file */
-    XLSX.writeFile(wb, fileName);
-  }
 
   onEditClicked(foodItemId: number) {
     this.messageService.sendData(
