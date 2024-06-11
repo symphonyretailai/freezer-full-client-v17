@@ -1,6 +1,6 @@
 ﻿import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { itemLocationsByFreezer } from '../_helpers/data';
 
@@ -13,8 +13,14 @@ import { Observable, Subscription, of } from 'rxjs';
 import { ItemLocations } from '../_models/itemLocations';
 import { FoodItem } from '@app/_models';
 import { ITag } from '@app/_models/ITag';
+import { TagComponent } from './tag/tag.component';
+import { NgClass, NgIf, NgFor, AsyncPipe } from '@angular/common';
 
-@Component({ templateUrl: 'add-edit.component.html' })
+@Component({
+    templateUrl: 'add-edit.component.html',
+    standalone: true,
+    imports: [ReactiveFormsModule, NgClass, NgIf, NgFor, RouterLink, TagComponent, AsyncPipe]
+})
 export class AddEditComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   itemLocations$: Observable<ItemLocations[] | null> | undefined;

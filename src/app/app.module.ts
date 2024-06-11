@@ -9,14 +9,11 @@ import { AppComponent } from './app.component';
 import { AlertComponent } from './_components';
 import { HomeComponent } from './home';
 
-@NgModule({ declarations: [
-        AppComponent,
-        AlertComponent,
-        HomeComponent
-    ],
+@NgModule({ declarations: [AppComponent],
     bootstrap: [AppComponent], imports: [BrowserModule,
         ReactiveFormsModule,
-        AppRoutingModule], providers: [
+        AppRoutingModule, AlertComponent,
+        HomeComponent], providers: [
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         provideHttpClient(withInterceptorsFromDi()),
     ] })
