@@ -3,7 +3,8 @@ import { Sort } from '@app/_helpers/sort';
 
 
 @Directive({
-  selector: '[appSort]'
+    selector: '[appSort]',
+    standalone: true
 })
 export class SortDirective {
 

@@ -12,12 +12,6 @@ import { TagComponent } from "./tag/tag.component";
 import { FilterByTagPipe } from "../_pipes/filter-by-tag.pipe";
 
 @NgModule({
-    declarations: [
-        LayoutComponent,
-        ListComponent,
-        AddEditComponent,
-        SortDirective
-    ],
     imports: [
         CommonModule,
         ReactiveFormsModule,
@@ -25,7 +19,11 @@ import { FilterByTagPipe } from "../_pipes/filter-by-tag.pipe";
         FormsModule,
         FilterPipe,
         TagComponent,
-        FilterByTagPipe
+        FilterByTagPipe,
+        LayoutComponent,
+        ListComponent,
+        AddEditComponent,
+        SortDirective
     ]
 })
 export class FoodItemsModule { }

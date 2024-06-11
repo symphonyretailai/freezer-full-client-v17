@@ -1,6 +1,6 @@
 ﻿import { Component, OnDestroy, OnInit } from '@angular/core';
 import { catchError, finalize, first, tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   FoodItemService,
   AlertService,
@@ -10,8 +10,17 @@ import {
 import { Subscription, throwError } from 'rxjs';
 import { FoodItem } from '@app/_models';
 import { ITag } from '@app/_models/ITag';
+import { FilterByTagPipe } from '../_pipes/filter-by-tag.pipe';
+import { FilterPipe } from '../_pipes/filter.pipe';
+import { SortDirective } from '../_directives/sort.directive';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { NgIf, NgFor } from '@angular/common';
 
-@Component({ templateUrl: 'list.component.html' })
+@Component({
+    templateUrl: 'list.component.html',
+    standalone: true,
+    imports: [RouterLink, NgIf, ReactiveFormsModule, FormsModule, NgFor, SortDirective, FilterPipe, FilterByTagPipe]
+})
 export class ListComponent implements OnInit, OnDestroy {
   foodItems!: FoodItem[];
   searchtext: any;
